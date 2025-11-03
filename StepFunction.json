@@ -36,6 +36,14 @@
           "--month.$": "$.month"
         }
       },
+      "Next": "StartCrawlerCurated"
+    },
+    "StartCrawlerCurated": {
+      "Type": "Task",
+      "Parameters": {
+        "Name": "crawler_curated"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
       "End": true
     }
   }
