@@ -49,9 +49,9 @@ Se crearon **dos tipos de jobs para cada etapa**:
 
 - **Lambda** detecta la llegada de nuevos archivos en RAW y activa la **Step Function**, en eesta lamda se extrae el file path del archivo nuevo y el año y mes al cual pertenece, estos son parametros que se le envían a la step function para solo activar los trabajos para este archivo en especifico.
 
-- La **Step Function** ejecuta los jobs de Glue en orden: primero RAW → CLEAN, luego CLEAN → CURATED, entre estas se hace un retry por si hay fallas en algún trabajo
+- La **Step Function** ejecuta los jobs de Glue en orden: primero RAW → CLEAN, luego CLEAN → CURATED, entre estas se hace un retry por si hay fallas en algún trabajo, luego de los jobs se corre el Crawler de curated para actualizar las tablas
 
-![SF](Photos/StepFunction.png)
+![SF](Photos/SF.png)
 
 ### Solamente se procesa la información de este nuevo archivo para cada una de las zonas
 
@@ -60,6 +60,12 @@ Se crearon **dos tipos de jobs para cada etapa**:
 - Se tienen 3 consultas para ver las carpetas creadas en curated
 
   - Airport fee: se quizo crear para saber la cantidad de pasajeros que tienen los taxis que hacen viajes en aeropuertos y así poder ver como asignar la flota de mejor manera
-
   - Total Amount: comparación de income por diferentes periodos de tiempo
   - Eficiencia: comparar según el códgigo de area como es la eficiencia del viaje
+
+  ![ATH](Photos/Athena.png)
+
+# VIDEO DEMO
+
+- Upload file: muestra como se activa la SF cuando se sube un archivo
+- Curated Files: muestra las carpetas que se crearon en el job clean-curated apartir del nuevo archivo
