@@ -1,0 +1,42 @@
+{
+  "Comment": "Procesar nuevos archivos RAW de taxis",
+  "StartAt": "Run_Cleaned_Job",
+  "States": {
+    "Run_Cleaned_Job": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "raw-clean",
+        "Arguments": {
+          "--JOB_NAME": "raw-clean",
+          "--input_path.$": "$.input_path"
+        }
+      },
+      "ResultPath": null,
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Glue.ConcurrentRunsExceededException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 3,
+          "BackoffRate": 2
+        }
+      ],
+      "Next": "Run_curated_job"
+    },
+    "Run_curated_job": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "clean_curated",
+        "Arguments": {
+          "--JOB_NAME": "clean_curated",
+          "--year.$": "$.year",
+          "--month.$": "$.month"
+        }
+      },
+      "End": true
+    }
+  }
+}
